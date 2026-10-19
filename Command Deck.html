@@ -1,0 +1,1380 @@
+<!doctype html>
+<html data-theme="dark" style="color-scheme:dark"><head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<!-- ARTIFACT-FRAGMENT-START -->
+<title>Command Deck</title>
+<style>
+  :root {
+    --bg: #f6f2ea;
+    --surface: #ffffff;
+    --surface-2: #efe8d9;
+    --ink: #211d17;
+    --ink-muted: #766c5b;
+    --line: #e3d9c4;
+    --accent: #c1602b;
+    --accent-ink: #fff8f0;
+    --accent-soft: #f3ddc4;
+    --teal: #2b6f6e;
+    --teal-soft: #dcebe9;
+    --good: #3e7d4c;
+    --good-soft: #dcecdf;
+    --alert: #b23b2e;
+    --alert-soft: #f6dbd5;
+    --shadow: 0 1px 2px rgba(33, 29, 23, 0.04), 0 8px 24px -12px rgba(33, 29, 23, 0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17140f;
+      --surface: #201b14;
+      --surface-2: #2a2318;
+      --ink: #f1e9db;
+      --ink-muted: #a89a83;
+      --line: rgba(241, 233, 219, 0.12);
+      --accent: #e08a44;
+      --accent-ink: #201202;
+      --accent-soft: rgba(224, 138, 68, 0.16);
+      --teal: #59b0a9;
+      --teal-soft: rgba(89, 176, 169, 0.16);
+      --good: #74c084;
+      --good-soft: rgba(116, 192, 132, 0.14);
+      --alert: #e2695a;
+      --alert-soft: rgba(226, 105, 90, 0.16);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #17140f;
+    --surface: #201b14;
+    --surface-2: #2a2318;
+    --ink: #f1e9db;
+    --ink-muted: #a89a83;
+    --line: rgba(241, 233, 219, 0.12);
+    --accent: #e08a44;
+    --accent-ink: #201202;
+    --accent-soft: rgba(224, 138, 68, 0.16);
+    --teal: #59b0a9;
+    --teal-soft: rgba(89, 176, 169, 0.16);
+    --good: #74c084;
+    --good-soft: rgba(116, 192, 132, 0.14);
+    --alert: #e2695a;
+    --alert-soft: rgba(226, 105, 90, 0.16);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 28px 32px 60px;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; }
+
+  .dashboard {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .greeting-block h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.05;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+
+  .greeting-block .date-line {
+    font-size: 14px;
+    color: var(--ink-muted);
+    letter-spacing: 0.01em;
+  }
+
+  .clock-weather {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .clock {
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .clock .secs { color: var(--ink-muted); font-size: 0.55em; }
+
+  .weather-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .weather-chip .temp {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 22px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .weather-chip .meta {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+
+  .weather-chip .meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .grid.secondary { grid-template-columns: 1.1fr 0.85fr 0.85fr; }
+
+  @media (max-width: 900px) {
+    .grid, .grid.secondary { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 18px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+
+  .card-title .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--good);
+    box-shadow: 0 0 0 3px var(--good-soft);
+  }
+
+  .card-title .dot.live { animation: pulse 2.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .card-title .dot.live { animation: none; } }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--good-soft); }
+    50% { box-shadow: 0 0 0 6px var(--good-soft); }
+  }
+
+  .count-badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .count-badge.hot { background: var(--alert-soft); color: var(--alert); }
+  .count-badge.calm { background: var(--good-soft); color: var(--good); }
+
+  .card-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+    max-height: 260px;
+  }
+
+  .card-list li {
+    padding: 9px 4px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .card-list li:last-child { border-bottom: none; }
+
+  .item-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 8px;
+    font-weight: 600;
+  }
+
+  .item-top > span:first-child {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .item-sub {
+    color: var(--ink-muted);
+    font-size: 12.5px;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .item-time {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .badge-inline {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 1px 7px;
+    border-radius: 999px;
+    margin-right: 6px;
+  }
+
+  .badge-zoom { background: var(--teal-soft); color: var(--teal); }
+  .badge-now { background: var(--alert-soft); color: var(--alert); }
+  .badge-past { background: var(--surface-2); color: var(--ink-muted); }
+
+  .empty-state, .fallback-state {
+    font-size: 13px;
+    color: var(--ink-muted);
+    padding: 14px 4px;
+    line-height: 1.5;
+  }
+
+  .fallback-state.error { color: var(--alert); }
+  .fallback-state a.fix-link { color: var(--accent); text-decoration: underline; font-weight: 600; }
+
+  .card-foot {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--surface-2), var(--line), var(--surface-2));
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    margin: 8px 4px;
+  }
+  @media (prefers-reduced-motion: reduce) { .skeleton-line { animation: none; } }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* ---------- todo ---------- */
+  .todo-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .todo-form input[type="text"] {
+    flex: 1;
+    font: inherit;
+    font-size: 13.5px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .todo-form input[type="text"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .todo-form button {
+    font: inherit;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+  }
+  .todo-form button:hover { filter: brightness(1.05); }
+  .todo-form button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 7px 2px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .todo-item:last-child { border-bottom: none; }
+
+  .todo-item input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+
+  .todo-item .todo-text { flex: 1; line-height: 1.4; }
+  .todo-item.done .todo-text { color: var(--ink-muted); text-decoration: line-through; }
+
+  .todo-remove {
+    background: none;
+    border: none;
+    color: var(--ink-muted);
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    padding: 2px 4px;
+  }
+  .todo-remove:hover { color: var(--alert); }
+
+  .save-note { font-size: 11px; color: var(--ink-muted); margin-top: 8px; min-height: 14px; }
+
+  .src-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--teal);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--teal);
+    margin-left: 5px;
+    white-space: nowrap;
+  }
+  .src-tag:hover { color: var(--accent); border-color: var(--accent); }
+
+  .due-tag {
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-left: 6px;
+    white-space: nowrap;
+  }
+  .due-tag.overdue { color: var(--alert); font-weight: 600; }
+
+  /* ---------- quote & links ---------- */
+  .quote-text {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.5;
+    text-wrap: balance;
+    margin: 4px 0 10px;
+  }
+  .quote-attr { font-size: 12px; color: var(--ink-muted); }
+
+  .link-form {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .link-form input[type="text"] {
+    font: inherit;
+    font-size: 12.5px;
+    padding: 7px 9px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    min-width: 0;
+  }
+  .link-form input#linkNameInput { flex: 0 0 32%; }
+  .link-form input#linkUrlInput { flex: 1 1 auto; }
+  .link-form input[type="text"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .link-form button {
+    font: inherit;
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 7px 13px;
+    border-radius: 9px;
+    border: none;
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+    flex: none;
+  }
+  .link-form button:hover { filter: brightness(1.05); }
+
+  .links-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    max-height: 230px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 5px 6px 10px;
+    border-radius: 9px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    overflow: hidden;
+    min-width: 0;
+  }
+  .quick-link-open {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+  .quick-link-open:hover { color: var(--accent); }
+  .quick-link .swatch { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .quick-link .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+  .link-icon-btn {
+    background: none;
+    border: none;
+    color: var(--ink-muted);
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    padding: 4px 5px;
+    border-radius: 6px;
+    opacity: 0.5;
+    flex: none;
+  }
+  .quick-link:hover .link-icon-btn,
+  .quick-link:focus-within .link-icon-btn,
+  .link-icon-btn:focus-visible { opacity: 1; }
+  .link-icon-btn:hover { color: var(--accent); background: var(--surface); }
+
+  .quick-link-edit {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 9px;
+    border: 1px solid var(--accent);
+    background: var(--surface-2);
+  }
+  .quick-link-edit input {
+    font: inherit;
+    font-size: 12.5px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    min-width: 0;
+    flex: 1 1 130px;
+  }
+  .quick-link-edit .link-icon-btn {
+    opacity: 1;
+    padding: 6px 11px;
+    font-weight: 600;
+    font-size: 12.5px;
+  }
+  .quick-link-edit .link-icon-btn.save { background: var(--accent); color: var(--accent-ink); }
+  .quick-link-edit .link-icon-btn.cancel { background: var(--surface); color: var(--ink-muted); border: 1px solid var(--line); }
+
+  .page-banner {
+    display: none;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--ink);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .page-banner.show { display: block; }
+
+  footer.note {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    padding-top: 6px;
+  }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+
+<div class="dashboard" id="app">
+
+  <div class="page-banner" id="mcpBanner"></div>
+
+  <div class="topbar">
+    <div class="greeting-block">
+      <h1 id="greeting">Good day, Anmol</h1>
+      <div class="date-line" id="dateLine">&nbsp;</div>
+    </div>
+    <div class="clock-weather">
+      <div class="clock" id="clock">--:--<span class="secs">--</span></div>
+      <div class="weather-chip" id="weatherChip">
+        <div class="temp" id="weatherTemp">--°</div>
+        <div class="meta">
+          <strong id="weatherCondition">Loading…</strong>
+          <span id="weatherRange">&nbsp;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <section class="card" id="card-gmail">
+      <div class="card-head">
+        <div class="card-title"><span class="dot live"></span>Inbox · Unread</div>
+        <span class="count-badge" id="gmail-count">···</span>
+      </div>
+      <div id="gmail-body">
+        <div class="skeleton-line" style="width:90%"></div>
+        <div class="skeleton-line" style="width:70%"></div>
+        <div class="skeleton-line" style="width:80%"></div>
+      </div>
+      <div class="card-foot"><span>Gmail</span><span id="gmail-updated">connecting…</span></div>
+    </section>
+
+    <section class="card" id="card-slack">
+      <div class="card-head">
+        <div class="card-title"><span class="dot live"></span>Slack · Sent to you</div>
+        <span class="count-badge" id="slack-count">···</span>
+      </div>
+      <div id="slack-body">
+        <div class="skeleton-line" style="width:85%"></div>
+        <div class="skeleton-line" style="width:65%"></div>
+        <div class="skeleton-line" style="width:75%"></div>
+      </div>
+      <div class="card-foot"><span>Last 24h · DMs &amp; mentions</span><span id="slack-updated">connecting…</span></div>
+    </section>
+
+    <section class="card" id="card-calendar">
+      <div class="card-head">
+        <div class="card-title"><span class="dot live"></span>Today</div>
+        <span class="count-badge" id="cal-count">···</span>
+      </div>
+      <div id="cal-body">
+        <div class="skeleton-line" style="width:90%"></div>
+        <div class="skeleton-line" style="width:60%"></div>
+        <div class="skeleton-line" style="width:80%"></div>
+      </div>
+      <div class="card-foot"><span>Google Calendar · Zoom flagged</span><span id="cal-updated">connecting…</span></div>
+    </section>
+
+  </div>
+
+  <div class="grid secondary">
+
+    <section class="card" id="card-todo">
+      <div class="card-head">
+        <div class="card-title"><span class="dot live"></span>Checklist</div>
+        <span class="count-badge" id="todo-count">0</span>
+      </div>
+      <form class="todo-form" id="todoForm">
+        <input type="text" id="todoInput" placeholder="Add a task…" maxlength="140" autocomplete="off">
+        <button type="submit">Add</button>
+      </form>
+      <ul class="card-list" id="todoList" style="max-height:220px;"></ul>
+      <div class="save-note" id="todoSaveNote">&nbsp;</div>
+      <div class="card-foot"><span>Asana · My Tasks due this week</span><span id="todo-sync-note">connecting…</span></div>
+    </section>
+
+    <section class="card" id="card-quote">
+      <div class="card-head">
+        <div class="card-title">Focus for Today</div>
+      </div>
+      <p class="quote-text" id="quoteText">…</p>
+      <div class="quote-attr" id="quoteAttr"></div>
+    </section>
+
+    <section class="card" id="card-links">
+      <div class="card-head">
+        <div class="card-title">Quick Links</div>
+        <span class="count-badge" id="links-count">0</span>
+      </div>
+      <form class="link-form" id="linkForm">
+        <input type="text" id="linkNameInput" placeholder="Name" maxlength="40" autocomplete="off">
+        <input type="text" id="linkUrlInput" placeholder="URL" maxlength="300" autocomplete="off">
+        <button type="submit">Add</button>
+      </form>
+      <div class="links-row" id="linksRow"></div>
+      <div class="save-note" id="linksSaveNote">&nbsp;</div>
+      <div class="card-foot"><span>Imported from Chrome, editable here</span><span>&nbsp;</span></div>
+    </section>
+
+  </div>
+
+  <footer class="note">Inbox, Slack, Calendar &amp; the checklist refresh roughly every minute while this page is open. Weather updates about once an hour. Slack shows recent DMs &amp; mentions—Slack doesn’t expose a true unread count to connected apps. The checklist mirrors Asana “My Tasks” due within the next 7 days; there’s no Google Tasks connector available to sync with yet. Quick Links started as an import of your Chrome Favorites bar and is now yours to edit—add, rename, or remove links right here (there’s still no live bookmarks connector, so changes here don’t sync back to Chrome).</footer>
+
+</div>
+
+<script id="todo-data" type="application/json">[{"id":"asana-1217876076918873","text":"Month end close workbook","done":false,"asanaGid":"1217876076918873","dueOn":"2026-09-04","permalink":"#","source":"asana"}]</script>
+<script id="weather-data" type="application/json">{"city":"Toronto, ON","tempC":15,"condition":"Sunny, becoming a mix of sun and cloud","highC":23,"lowC":14,"updatedAt":"2026-08-28T17:12:00-04:00"}</script>
+<script id="links-data" type="application/json">[{"id":"google","label":"Google","url":"#","color":"#4285f4","title":"Google"},{"id":"gmail","label":"Gmail","url":"#","color":"var(--alert)","title":"Gmail"},{"id":"Vendor 24","label":"Bamboo HR","url":"https://statrecoveryservices.Vendor 24.com/app/settings/users/mfa_settings","color":"#6cb33f","title":"Bamboo HR"},{"id":"netsuite","label":"NetSuite","url":"#","color":"#2e5aac","title":"NetSuite"},{"id":"qbo","label":"QBO","url":"#","color":"#2ca01c","title":"QBO"},{"id":"ramp","label":"Ramp","url":"#","color":"#1f2937","title":"Ramp"},{"id":"wave","label":"Wave","url":"https://payroll.waveapps.com/employee_personal/pay_stubs","color":"#4a9ff5","title":"Wave"},{"id":"zoom","label":"Zoom","url":"# 235/download","color":"var(--good)","title":"Zoom"},{"id":"chatgpt","label":"ChatGPT","url":"https://chatgpt.com/?add_source=gdrive_action_connector","color":"#10a37f","title":"ChatGPT"},{"id":"jira","label":"Jira","url":"#","color":"#2684ff","title":"Jira"},{"id":"jira-ticket","label":"Jira-Ticket","url":"#","color":"#2684ff","title":"Jira-Ticket"},{"id":"vanta","label":"Vanta","url":"https://app.vanta.com/c/example.com/agent/download","color":"#6c4cd8","title":"Vanta"},{"id":"slack","label":"Slack","url":"#","color":"var(--teal)","title":"Slack"},{"id":"notion","label":"Notion","url":"#","color":"#2f2f2f","title":"Notion"},{"id":"hubspot","label":"HubSpot","url":"#","color":"#ff7a59","title":"HubSpot"},{"id":"asana","label":"Asana","url":"#","color":"#8b6bb0","title":"Asana"}]</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var ORIGINAL_HTML = document.documentElement.outerHTML;
+
+  var TIME_ZONE = "America/Toronto";
+  var USER_NAME = "Anmol";
+
+  // ---------------- clock + greeting ----------------
+  function paintClock() {
+    var now = new Date();
+    var timeFmt = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+    var parts = timeFmt.formatToParts(now).reduce(function (acc, p) { acc[p.type] = p.value; return acc; }, {});
+    var clockEl = document.getElementById("clock");
+    if (clockEl) {
+      clockEl.innerHTML = parts.hour + ":" + parts.minute + '<span class="secs">:' + parts.second + " " + (parts.dayPeriod || "") + "</span>";
+    }
+    var dateFmt = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, weekday: "long", month: "long", day: "numeric" });
+    var dateEl = document.getElementById("dateLine");
+    if (dateEl) dateEl.textContent = dateFmt.format(now);
+
+    var hourFmt = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "2-digit", hour12: false });
+    var hour24 = parseInt(hourFmt.format(now), 10);
+    var greetingWord = hour24 < 12 ? "Good morning" : hour24 < 17 ? "Good afternoon" : "Good evening";
+    var greetEl = document.getElementById("greeting");
+    if (greetEl) greetEl.textContent = greetingWord + ", " + USER_NAME;
+
+    refreshCalendarBadges(now);
+  }
+  paintClock();
+  setInterval(paintClock, 1000);
+
+  // ---------------- toronto day bounds (for calendar query) ----------------
+  function torontoDayBoundsISO() {
+    var now = new Date();
+    var dateFmt = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" });
+    var dateStr = dateFmt.format(now); // YYYY-MM-DD
+    var offset = "-04:00";
+    try {
+      var offFmt = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, timeZoneName: "shortOffset" });
+      var tzPart = offFmt.formatToParts(now).find(function (p) { return p.type === "timeZoneName"; });
+      if (tzPart && tzPart.value) {
+        var m = tzPart.value.match(/GMT([+-]\d{1,2})(?::?(\d{2}))?/);
+        if (m) {
+          var h = m[1].replace("+", "");
+          var sign = m[1].indexOf("-") === 0 ? "-" : "+";
+          var hh = Math.abs(parseInt(m[1], 10)).toString().padStart(2, "0");
+          var mm = (m[2] || "00").padStart(2, "0");
+          offset = sign + hh + ":" + mm;
+        }
+      }
+    } catch (e) { /* keep default */ }
+    return {
+      start: dateStr + "T00:00:00" + offset,
+      end: dateStr + "T23:59:59" + offset
+    };
+  }
+
+  // ---------------- quote of the day ----------------
+  var QUOTES = [
+    { text: "The key is not to prioritize what's on your schedule, but to schedule your priorities.", by: "Stephen Covey" },
+    { text: "Do the hard things first. The rest of the day gets easier.", by: "Unknown" },
+    { text: "Clear inbox, clear mind—but only after the important calls are handled.", by: "Command Deck" },
+    { text: "Progress, not perfection. One thread closed is one thread closed.", by: "Unknown" },
+    { text: "A calendar you actually look at beats a to-do list you never open.", by: "Unknown" },
+    { text: "Answer the one email that unblocks someone else first.", by: "Unknown" },
+    { text: "Small collections add up. So do small follow-ups.", by: "Command Deck" },
+    { text: "Deep work in the morning, admin in the afternoon.", by: "Cal Newport (paraphrased)" }
+  ];
+  (function paintQuote() {
+    var start = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 0));
+    var diff = Date.now() - start.getTime();
+    var dayOfYear = Math.floor(diff / 86400000);
+    var q = QUOTES[dayOfYear % QUOTES.length];
+    document.getElementById("quoteText").textContent = "“" + q.text + "”";
+    document.getElementById("quoteAttr").textContent = "— " + q.by;
+  })();
+
+  // ---------------- weather (static, refreshed hourly by scheduled task) ----------------
+  (function paintWeather() {
+    try {
+      var raw = document.getElementById("weather-data").textContent;
+      var w = JSON.parse(raw);
+      document.getElementById("weatherTemp").textContent = Math.round(w.tempC) + "°C";
+      document.getElementById("weatherCondition").textContent = w.condition;
+      document.getElementById("weatherRange").innerHTML = "H:" + Math.round(w.highC) + "° L:" + Math.round(w.lowC) + "° · " + w.city;
+    } catch (e) {
+      document.getElementById("weatherCondition").textContent = "Unavailable";
+    }
+  })();
+
+  // ---------------- todo (persisted via artifact capability, mirrored to Asana) ----------------
+  var todoState = [];
+  try { todoState = JSON.parse(document.getElementById("todo-data").textContent) || []; } catch (e) { todoState = []; }
+  var linksState = [];
+  try { linksState = JSON.parse(document.getElementById("links-data").textContent) || []; } catch (e) { linksState = []; }
+  var editingLinkId = null;
+  var artifactNS = null;
+  var canSave = false;
+  var mcpRef = null;
+  var asanaServer = null;
+  var asanaTools = { list: null, create: null, update: null };
+
+  function torontoDateOnlyStr(offsetDays) {
+    var now = new Date();
+    var dateFmt = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" });
+    var todayStr = dateFmt.format(now);
+    var d = new Date(todayStr + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() + offsetDays);
+    return d.toISOString().slice(0, 10);
+  }
+
+  function formatDueLabel(dueOn) {
+    if (!dueOn) return "";
+    var todayStr = torontoDateOnlyStr(0);
+    var tomorrowStr = torontoDateOnlyStr(1);
+    if (dueOn === todayStr) return "Due today";
+    if (dueOn === tomorrowStr) return "Due tomorrow";
+    if (dueOn < todayStr) return "Overdue";
+    var d = new Date(dueOn + "T12:00:00");
+    return "Due " + new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, weekday: "short", month: "short", day: "numeric" }).format(d);
+  }
+
+  function renderTodos() {
+    var list = document.getElementById("todoList");
+    list.innerHTML = "";
+    if (!todoState.length) {
+      var empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = "Nothing on the list yet.";
+      list.appendChild(empty);
+    }
+    todoState.forEach(function (item) {
+      var li = document.createElement("li");
+      li.className = "todo-item" + (item.done ? " done" : "");
+      li.style.listStyle = "none";
+      li.style.borderBottom = "1px solid var(--line)";
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!item.done;
+      cb.addEventListener("change", function () { onToggleTodo(item, cb.checked); });
+      var span = document.createElement("span");
+      span.className = "todo-text";
+      var dueLabel = formatDueLabel(item.dueOn);
+      var html = escapeHtml(item.text);
+      if (item.source === "asana") {
+        html += ' <a href="' + escapeHtml(item.permalink || "#") + '" target="_blank" rel="noopener" class="src-tag" title="Open in Asana">Asana</a>';
+      }
+      if (dueLabel) {
+        html += ' <span class="due-tag' + (dueLabel === "Overdue" ? " overdue" : "") + '">' + dueLabel + "</span>";
+      }
+      span.innerHTML = html;
+      var rm = document.createElement("button");
+      rm.type = "button";
+      rm.className = "todo-remove";
+      rm.setAttribute("aria-label", "Remove task");
+      rm.textContent = "×";
+      rm.addEventListener("click", function () { onRemoveTodo(item); });
+      li.appendChild(cb);
+      li.appendChild(span);
+      li.appendChild(rm);
+      list.appendChild(li);
+    });
+    var remaining = todoState.filter(function (t) { return !t.done; }).length;
+    document.getElementById("todo-count").textContent = String(remaining);
+  }
+  renderTodos();
+
+  function onToggleTodo(item, checked) {
+    item.done = checked;
+    renderTodos();
+    if (checked && item.asanaGid && mcpRef && asanaServer && asanaTools.update) {
+      mcpRef.callTool(asanaServer.server, asanaTools.update, { tasks: [{ task: item.asanaGid, completed: true }] }).then(function () {
+        todoState = todoState.filter(function (t) { return t.id !== item.id; });
+        renderTodos();
+        persistState("todoSaveNote");
+      }).catch(function () {
+        setSaveNote("Marked done here — Asana update failed, will retry on next sync.");
+        persistState("todoSaveNote");
+      });
+    } else {
+      persistState("todoSaveNote");
+    }
+  }
+
+  function onRemoveTodo(item) {
+    if (item.asanaGid && mcpRef && asanaServer && asanaTools.update) {
+      mcpRef.callTool(asanaServer.server, asanaTools.update, { tasks: [{ task: item.asanaGid, completed: true }] }).catch(function () {});
+    }
+    todoState = todoState.filter(function (t) { return t.id !== item.id; });
+    renderTodos();
+    persistState("todoSaveNote");
+  }
+
+  function mergeAsanaTasks(tasks) {
+    // Asana is the source of truth for these entries: re-derived fresh on every load/poll,
+    // never written back to the saved document (that would publish without a viewer action).
+    var incoming = {};
+    tasks.forEach(function (t) { incoming[t.gid] = t; });
+    todoState = todoState.filter(function (item) { return item.source !== "asana" || incoming[item.asanaGid]; });
+    tasks.forEach(function (t) {
+      var existing = todoState.find(function (item) { return item.asanaGid === t.gid; });
+      if (existing) {
+        existing.text = t.name;
+        existing.dueOn = t.due_on || null;
+        existing.permalink = t.permalink_url || existing.permalink || null;
+        existing.done = !!t.completed;
+      } else {
+        todoState.push({ id: "asana-" + t.gid, text: t.name, done: !!t.completed, asanaGid: t.gid, dueOn: t.due_on || null, permalink: t.permalink_url || null, source: "asana" });
+      }
+    });
+    renderTodos();
+  }
+
+  function wireAsanaTasks(mcp, server) {
+    var noteId = "todo-sync-note";
+    if (!server) {
+      var el0 = document.getElementById(noteId);
+      if (el0) el0.textContent = "Add Asana in claude.ai Settings → Connectors to sync.";
+      return;
+    }
+    var listTool = (server.tools.find(function (t) { return /get_my_tasks/i.test(t.name); }) || {}).name;
+    var createTool = (server.tools.find(function (t) { return /create_tasks/i.test(t.name); }) || {}).name;
+    var updateTool = (server.tools.find(function (t) { return /update_tasks/i.test(t.name); }) || {}).name;
+    mcpRef = mcp;
+    asanaServer = server;
+    asanaTools.list = listTool;
+    asanaTools.create = createTool;
+    asanaTools.update = updateTool;
+    if (!listTool) {
+      document.getElementById(noteId).textContent = "Asana connected, but the tasks tool wasn't available.";
+      return;
+    }
+    mcp.watchTool(server.server, listTool, { completed_since: "now", limit: 50, opt_fields: "gid,name,due_on,completed,permalink_url" }, function (ev) {
+      var noteEl = document.getElementById(noteId);
+      if (ev.type === "error") {
+        if (noteEl) noteEl.textContent = fixCopyFor(ev.error.code, "Asana");
+        return;
+      }
+      var payload = ev.result.payload || {};
+      var tasks = payload.data || [];
+      var todayStr = torontoDateOnlyStr(0);
+      var weekEndStr = torontoDateOnlyStr(7);
+      var inWindow = tasks.filter(function (t) { return t.due_on && t.due_on >= todayStr && t.due_on <= weekEndStr; });
+      mergeAsanaTasks(inWindow);
+      if (noteEl) noteEl.textContent = "synced now";
+    }, { refetchInterval: 60000 });
+  }
+
+  var noteTimers = {};
+  function setNote(elId, msg) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    el.textContent = msg;
+    clearTimeout(noteTimers[elId]);
+    noteTimers[elId] = setTimeout(function () { el.textContent = " "; }, 3000);
+  }
+  function setSaveNote(msg) { setNote("todoSaveNote", msg); }
+
+  function replaceJsonBlock(html, id, data) {
+    var re = new RegExp('(<script id="' + id + '" type="application\\/json">)[\\s\\S]*?(<\\/script>)');
+    if (!re.test(html)) return null;
+    return html.replace(re, function (_, open, close) { return open + JSON.stringify(data) + close; });
+  }
+
+  // Single save path for everything the viewer can edit (checklist + quick links). Always
+  // re-derives BOTH blocks from current in-memory state so saving one never reverts an
+  // unsaved change to the other. Call only in direct response to a viewer action.
+  function persistState(noteId) {
+    if (!canSave || !artifactNS) {
+      setNote(noteId, "Saved for this view only — sign in to keep changes across visits.");
+      return;
+    }
+    var html = replaceJsonBlock(ORIGINAL_HTML, "todo-data", todoState);
+    html = html && replaceJsonBlock(html, "links-data", linksState);
+    if (!html) {
+      setNote(noteId, "Couldn't locate save point — changes kept for this view only.");
+      return;
+    }
+    var full = "<!doctype html>\n" + html;
+    setNote(noteId, "Saving…");
+    artifactNS.publish(full).then(function () {
+      setNote(noteId, "Saved.");
+    }).catch(function (err) {
+      var code = err && err.code;
+      if (code === "conflict") {
+        setNote(noteId, "Someone else updated this — reload to see the latest.");
+      } else if (code === "not_granted" || code === "not_writer") {
+        canSave = false;
+        setNote(noteId, "Read-only view — changes kept for this view only.");
+      } else {
+        setNote(noteId, "Couldn't save right now — changes kept for this view only.");
+      }
+    });
+  }
+
+  document.getElementById("todoForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var input = document.getElementById("todoInput");
+    var text = input.value.trim();
+    if (!text) return;
+    var item = { id: "t" + Date.now() + Math.floor(Math.random() * 1000), text: text, done: false, asanaGid: null, dueOn: null, permalink: null, source: "local" };
+    todoState.push(item);
+    input.value = "";
+    renderTodos();
+    persistState("todoSaveNote");
+    if (mcpRef && asanaServer && asanaTools.create) {
+      mcpRef.callTool(asanaServer.server, asanaTools.create, { tasks: [{ name: text, assignee: "me" }] }).then(function (res) {
+        var payload = res.payload;
+        var data = (payload && payload.data) || (Array.isArray(payload) ? payload : []);
+        var created = data[0];
+        if (created && created.gid) {
+          item.asanaGid = created.gid;
+          item.permalink = created.permalink_url || null;
+          item.source = "asana";
+          renderTodos();
+          persistState("todoSaveNote");
+        }
+      }).catch(function () {
+        setSaveNote("Saved here — couldn't create the matching Asana task.");
+      });
+    }
+  });
+
+  // ---------------- quick links (add / edit / remove, persisted via artifact capability) ----------------
+  var LINK_PALETTE = ["#c1602b", "#2b6f6e", "#3e7d4c", "#8b6bb0", "#2684ff", "#b23b2e", "#4285f4", "#ff7a59", "#6c4cd8", "#2ca01c"];
+
+  function normalizeUrl(raw) {
+    var u = (raw || "").trim();
+    if (!u) return "";
+    if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(u)) u = "https://" + u;
+    return u;
+  }
+
+  function hostnameOf(url) {
+    try { return new URL(url).hostname.replace(/^www\./, ""); } catch (e) { return url; }
+  }
+
+  function renderLinks() {
+    var row = document.getElementById("linksRow");
+    row.innerHTML = "";
+    if (!linksState.length) {
+      var empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "No quick links yet — add one above.";
+      row.appendChild(empty);
+    }
+    linksState.forEach(function (item) {
+      row.appendChild(editingLinkId === item.id ? buildLinkEditRow(item) : buildLinkChip(item));
+    });
+    document.getElementById("links-count").textContent = String(linksState.length);
+  }
+
+  function buildLinkChip(item) {
+    var wrap = document.createElement("div");
+    wrap.className = "quick-link";
+
+    var a = document.createElement("a");
+    a.className = "quick-link-open";
+    a.href = item.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.title = item.title || item.label;
+    var sw = document.createElement("span");
+    sw.className = "swatch";
+    sw.style.background = item.color || "var(--accent)";
+    var lbl = document.createElement("span");
+    lbl.className = "label";
+    lbl.textContent = item.label;
+    a.appendChild(sw);
+    a.appendChild(lbl);
+
+    var editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "link-icon-btn";
+    editBtn.setAttribute("aria-label", "Edit " + item.label);
+    editBtn.textContent = "✎";
+    editBtn.addEventListener("click", function () { editingLinkId = item.id; renderLinks(); });
+
+    var rmBtn = document.createElement("button");
+    rmBtn.type = "button";
+    rmBtn.className = "link-icon-btn";
+    rmBtn.setAttribute("aria-label", "Remove " + item.label);
+    rmBtn.textContent = "×";
+    rmBtn.addEventListener("click", function () {
+      linksState = linksState.filter(function (l) { return l.id !== item.id; });
+      renderLinks();
+      persistState("linksSaveNote");
+    });
+
+    wrap.appendChild(a);
+    wrap.appendChild(editBtn);
+    wrap.appendChild(rmBtn);
+    return wrap;
+  }
+
+  function buildLinkEditRow(item) {
+    var wrap = document.createElement("div");
+    wrap.className = "quick-link-edit";
+
+    var nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.value = item.label;
+    nameInput.maxLength = 40;
+    nameInput.setAttribute("aria-label", "Link name");
+
+    var urlInput = document.createElement("input");
+    urlInput.type = "text";
+    urlInput.value = item.url;
+    urlInput.maxLength = 300;
+    urlInput.setAttribute("aria-label", "Link URL");
+
+    function commit() {
+      var newUrl = normalizeUrl(urlInput.value) || item.url;
+      var newLabel = nameInput.value.trim() || hostnameOf(newUrl);
+      item.label = newLabel;
+      item.url = newUrl;
+      item.title = newLabel;
+      editingLinkId = null;
+      renderLinks();
+      persistState("linksSaveNote");
+    }
+
+    var save = document.createElement("button");
+    save.type = "button";
+    save.className = "link-icon-btn save";
+    save.textContent = "Save";
+    save.addEventListener("click", commit);
+
+    var cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "link-icon-btn cancel";
+    cancel.textContent = "Cancel";
+    cancel.addEventListener("click", function () { editingLinkId = null; renderLinks(); });
+
+    [nameInput, urlInput].forEach(function (el) {
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); commit(); }
+        if (e.key === "Escape") { editingLinkId = null; renderLinks(); }
+      });
+    });
+
+    wrap.appendChild(nameInput);
+    wrap.appendChild(urlInput);
+    wrap.appendChild(save);
+    wrap.appendChild(cancel);
+    return wrap;
+  }
+  renderLinks();
+
+  document.getElementById("linkForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var nameEl = document.getElementById("linkNameInput");
+    var urlEl = document.getElementById("linkUrlInput");
+    var url = normalizeUrl(urlEl.value);
+    if (!url) { setNote("linksSaveNote", "Enter a URL to add a link."); return; }
+    var label = nameEl.value.trim() || hostnameOf(url);
+    var color = LINK_PALETTE[linksState.length % LINK_PALETTE.length];
+    linksState.push({ id: "l" + Date.now() + Math.floor(Math.random() * 1000), label: label, url: url, color: color, title: label });
+    nameEl.value = "";
+    urlEl.value = "";
+    renderLinks();
+    persistState("linksSaveNote");
+  });
+
+  // ---------------- mcp-connected live tiles ----------------
+  var calendarEvents = [];
+
+  function fmtTimeInTz(iso) {
+    try {
+      return new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "numeric", minute: "2-digit" }).format(new Date(iso));
+    } catch (e) { return ""; }
+  }
+
+  function relativeAgo(iso) {
+    try {
+      var diffMs = Date.now() - new Date(iso).getTime();
+      var mins = Math.round(diffMs / 60000);
+      if (mins < 1) return "just now";
+      if (mins < 60) return mins + "m ago";
+      var hrs = Math.round(mins / 60);
+      if (hrs < 24) return hrs + "h ago";
+      return Math.round(hrs / 24) + "d ago";
+    } catch (e) { return ""; }
+  }
+
+  function fixCopyFor(code, serverLabel) {
+    if (code === "needs_reauth") return "Reconnect " + serverLabel + " in claude.ai Settings → Connectors.";
+    if (code === "server_not_connected") return "Add " + serverLabel + " in claude.ai Settings → Connectors.";
+    if (code === "selection_required") return "Choose which " + serverLabel + " account to use, then reload.";
+    if (code === "blocked_by_policy") return serverLabel + " access is blocked by your organization's policy.";
+    if (code === "approval_required") return "This request needs approval before " + serverLabel + " data can show here.";
+    return "Having trouble reaching " + serverLabel + " right now.";
+  }
+
+  function showCardFallback(bodyId, updatedId, code, serverLabel) {
+    var body = document.getElementById(bodyId);
+    var retract = ["needs_reauth", "server_not_connected", "selection_required", "blocked_by_policy", "approval_required", "not_in_manifest"];
+    if (retract.indexOf(code) !== -1 || !body.dataset.hasData) {
+      body.innerHTML = '<div class="fallback-state error">' + fixCopyFor(code, serverLabel) + "</div>";
+    }
+    document.getElementById(updatedId).textContent = "error";
+  }
+
+  function wireGmail(mcp, server) {
+    var bodyId = "gmail-body", updatedId = "gmail-updated", countId = "gmail-count";
+    if (!server) { showCardFallback(bodyId, updatedId, "server_not_connected", "Gmail"); return; }
+    var tool = (server.tools.find(function (t) { return /search_threads/i.test(t.name); }) || {}).name;
+    if (!tool) { showCardFallback(bodyId, updatedId, "server_not_connected", "Gmail"); return; }
+    mcp.watchTool(server.server, tool, { query: "is:unread in:inbox", pageSize: 10, view: "THREAD_VIEW_MINIMAL" }, function (ev) {
+      if (ev.type === "error") { showCardFallback(bodyId, updatedId, ev.error.code, "Gmail"); return; }
+      var payload = ev.result.payload || {};
+      var threads = payload.threads || [];
+      var count = parseInt(payload.resultCountEstimate, 10);
+      if (isNaN(count)) count = threads.length;
+      var badge = document.getElementById(countId);
+      badge.textContent = String(count);
+      badge.className = "count-badge" + (count > 0 ? " hot" : " calm");
+      var body = document.getElementById(bodyId);
+      body.dataset.hasData = "1";
+      if (!threads.length) {
+        body.innerHTML = '<div class="empty-state">Inbox zero. Nothing unread.</div>';
+      } else {
+        var ul = document.createElement("ul");
+        ul.className = "card-list";
+        threads.slice(0, 6).forEach(function (t) {
+          var msg = (t.messages && t.messages[t.messages.length - 1]) || {};
+          var li = document.createElement("li");
+          var sender = (msg.sender || "").replace(/<.*?>/g, "").trim();
+          li.innerHTML = '<div class="item-top"><span>' + escapeHtml(sender || "Unknown sender") + '</span><span class="item-time">' + relativeAgo(msg.date) + '</span></div>' +
+            '<div class="item-sub">' + escapeHtml(msg.subject || "(no subject)") + '</div>';
+          ul.appendChild(li);
+        });
+        body.innerHTML = "";
+        body.appendChild(ul);
+      }
+      var storedAt = ev.result.cache && ev.result.cache.storedAt;
+      document.getElementById(updatedId).textContent = storedAt ? "synced " + relativeAgo(new Date(storedAt).toISOString()) : "synced now";
+    }, { refetchInterval: 60000 });
+  }
+
+  function wireSlack(mcp, server) {
+    var bodyId = "slack-body", updatedId = "slack-updated", countId = "slack-count";
+    if (!server) { showCardFallback(bodyId, updatedId, "server_not_connected", "Slack"); return; }
+    var tool = (server.tools.find(function (t) { return /search_public_and_private|search_public/i.test(t.name); }) || {}).name;
+    if (!tool) { showCardFallback(bodyId, updatedId, "server_not_connected", "Slack"); return; }
+    var since = new Date(Date.now() - 24 * 3600 * 1000);
+    var sinceStr = since.toISOString().slice(0, 10);
+    mcp.watchTool(server.server, tool, { query: "to:me after:" + sinceStr, limit: 10, sort: "timestamp", sort_dir: "desc", only_my_channels: false }, function (ev) {
+      if (ev.type === "error") { showCardFallback(bodyId, updatedId, ev.error.code, "Slack"); return; }
+      var payload = ev.result.payload;
+      var text = typeof payload === "string" ? payload : (payload && payload.results) || "";
+      var body = document.getElementById(bodyId);
+      body.dataset.hasData = "1";
+      var entries = parseSlackResults(text);
+      document.getElementById(countId).textContent = String(entries.length);
+      document.getElementById(countId).className = "count-badge" + (entries.length > 0 ? " hot" : " calm");
+      if (!entries.length) {
+        body.innerHTML = '<div class="empty-state">No new DMs or mentions in the last day.</div>';
+      } else {
+        var ul = document.createElement("ul");
+        ul.className = "card-list";
+        entries.slice(0, 6).forEach(function (en) {
+          var li = document.createElement("li");
+          li.innerHTML = '<div class="item-top"><span>' + escapeHtml(en.from) + '</span><span class="item-time">' + escapeHtml(en.time) + '</span></div>' +
+            '<div class="item-sub">' + escapeHtml(en.text) + '</div>';
+          ul.appendChild(li);
+        });
+        body.innerHTML = "";
+        body.appendChild(ul);
+      }
+      document.getElementById(updatedId).textContent = "synced now";
+    }, { refetchInterval: 60000 });
+  }
+
+  function parseSlackResults(text) {
+    if (!text) return [];
+    var blocks = text.split(/\n---\n/);
+    var out = [];
+    blocks.forEach(function (b) {
+      var fromMatch = b.match(/From:\s*([^\n<]+)/);
+      var timeMatch = b.match(/Time:\s*([^\n]+)/);
+      var textMatch = b.match(/Text:\s*\n([\s\S]*?)(\nContext|$)/);
+      if (fromMatch) {
+        var fromClean = fromMatch[1].replace(/\s*\(ID:[^)]*\)/i, "").replace(/<[^>]*>/g, "").trim();
+        var timeClean = timeMatch ? timeMatch[1].replace(/^(\d{4}-\d{2}-\d{2})\s+/, "").trim() : "";
+        out.push({
+          from: fromClean,
+          time: timeClean,
+          text: textMatch ? textMatch[1].trim().slice(0, 140) : ""
+        });
+      }
+    });
+    return out;
+  }
+
+  function refreshCalendarBadges(now) {
+    var list = document.getElementById("cal-body");
+    if (!list || !list.dataset.hasData) return;
+    var items = list.querySelectorAll("[data-start][data-end]");
+    items.forEach(function (li) {
+      var start = new Date(li.getAttribute("data-start"));
+      var end = new Date(li.getAttribute("data-end"));
+      var badge = li.querySelector(".state-badge");
+      if (!badge) return;
+      if (now >= start && now <= end) { badge.className = "badge-inline badge-now state-badge"; badge.textContent = "Live now"; badge.style.display = "inline-block"; }
+      else if (now > end) { badge.className = "badge-inline badge-past state-badge"; badge.textContent = "Done"; badge.style.display = "inline-block"; }
+      else { badge.className = "badge-inline state-badge"; badge.style.display = "none"; }
+    });
+  }
+
+  function wireCalendar(mcp, server) {
+    var bodyId = "cal-body", updatedId = "cal-updated", countId = "cal-count";
+    if (!server) { showCardFallback(bodyId, updatedId, "server_not_connected", "Google Calendar"); return; }
+    var tool = (server.tools.find(function (t) { return /list_events/i.test(t.name); }) || {}).name;
+    if (!tool) { showCardFallback(bodyId, updatedId, "server_not_connected", "Google Calendar"); return; }
+    var bounds = torontoDayBoundsISO();
+    mcp.watchTool(server.server, tool, { startTime: bounds.start, endTime: bounds.end, timeZone: TIME_ZONE, orderBy: "startTime", pageSize: 25 }, function (ev) {
+      if (ev.type === "error") { showCardFallback(bodyId, updatedId, ev.error.code, "Google Calendar"); return; }
+      var payload = ev.result.payload || {};
+      var events = payload.events || [];
+      calendarEvents = events;
+      var body = document.getElementById(bodyId);
+      body.dataset.hasData = "1";
+      document.getElementById(countId).textContent = String(events.length);
+      document.getElementById(countId).className = "count-badge" + (events.length > 0 ? "" : " calm");
+      if (!events.length) {
+        body.innerHTML = '<div class="empty-state">Nothing on the calendar today.</div>';
+      } else {
+        var ul = document.createElement("ul");
+        ul.className = "card-list";
+        events.forEach(function (ev2) {
+          var startIso = (ev2.start && (ev2.start.dateTime || ev2.start.date)) || "";
+          var endIso = (ev2.end && (ev2.end.dateTime || ev2.end.date)) || startIso;
+          var isZoom = JSON.stringify(ev2).toLowerCase().indexOf("zoom") !== -1;
+          var li = document.createElement("li");
+          li.setAttribute("data-start", startIso);
+          li.setAttribute("data-end", endIso);
+          li.innerHTML = '<div class="item-top"><span>' + (isZoom ? '<span class="badge-inline badge-zoom">Zoom</span>' : "") +
+            '<span class="state-badge badge-inline badge-now" style="display:none"></span>' +
+            escapeHtml(ev2.summary || "(untitled event)") + '</span><span class="item-time">' + fmtTimeInTz(startIso) + "–" + fmtTimeInTz(endIso) + '</span></div>';
+          ul.appendChild(li);
+        });
+        body.innerHTML = "";
+        body.appendChild(ul);
+        refreshCalendarBadges(new Date());
+      }
+      document.getElementById(updatedId).textContent = "synced now";
+    }, { refetchInterval: 60000 });
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function showBanner(msg) {
+    var b = document.getElementById("mcpBanner");
+    b.textContent = msg;
+    b.className = "page-banner show";
+  }
+
+  async function boot() {
+    var artifact = null;
+    try { artifact = await claude.use("artifact"); } catch (e) { artifact = null; }
+    artifactNS = artifact;
+    canSave = !!artifact;
+
+    var mcp = null;
+    try { mcp = await claude.use("mcp"); } catch (e) { mcp = null; }
+    if (!mcp) {
+      showBanner("Live connector data isn't available in this view — showing a static layout. Open this dashboard on claude.ai to see live Gmail, Slack and Calendar data.");
+      ["gmail-body", "slack-body", "cal-body"].forEach(function (id) {
+        document.getElementById(id).innerHTML = '<div class="empty-state">Live data unavailable in this view.</div>';
+      });
+      ["gmail-updated", "slack-updated", "cal-updated"].forEach(function (id) { document.getElementById(id).textContent = "unavailable"; });
+      document.getElementById("todo-sync-note").textContent = "unavailable";
+      return;
+    }
+
+    var servers = [];
+    try {
+      var res = await mcp.listTools();
+      servers = res.servers || [];
+    } catch (e) {
+      showBanner("Couldn't reach your connected apps right now. Reload to try again.");
+      return;
+    }
+
+    function findServer(re) { return servers.find(function (s) { return re.test(s.server) && s.tools && s.tools.length; }); }
+
+    wireGmail(mcp, findServer(/gmail/i));
+    wireSlack(mcp, findServer(/slack/i));
+    wireCalendar(mcp, findServer(/google calendar/i));
+    wireAsanaTasks(mcp, findServer(/asana/i));
+  }
+
+  boot();
+})();
+</script></body></html>
