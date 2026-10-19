@@ -1,0 +1,163 @@
+<!doctype html><html data-theme="dark" style="color-scheme:dark"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Business Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one-column ledger. Priority panel first, stat tiles, then section panels with status pills. */
+:root{
+  --ink:#17211F;--paper:#F4F3EE;--paper-raised:#FFFFFF;--line:#DEDCD1;
+  --accent:#0B6B5C;--accent-soft:#E4EFEC;--muted:#5B6764;
+  --good:#2E7D4F;--good-soft:#E4F0E8;--warn:#B9781F;--warn-soft:#F6EBDA;--critical:#B3392C;--critical-soft:#FBEAE7;
+  --font-display:'Zilla Slab',Georgia,'Times New Roman',serif;
+  --font-body:'Public Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:'IBM Plex Mono','SF Mono',Consolas,monospace;
+  --text-xs:.75rem;--text-sm:.875rem;--text-base:1rem;--text-lg:1.125rem;--text-xl:1.375rem;--text-2xl:1.75rem;--text-3xl:2.25rem;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#EDEAE2;--paper:#14201C;--paper-raised:#1B2A25;--line:#2C3A34;--accent:#4FBFA5;--accent-soft:#1E332C;--muted:#A3B0AB;
+  --good:#6FCB94;--good-soft:#1D3226;--warn:#E0A559;--warn-soft:#362A16;--critical:#E37B6B;--critical-soft:#3A211C;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#EDEAE2;--paper:#14201C;--paper-raised:#1B2A25;--line:#2C3A34;--accent:#4FBFA5;--accent-soft:#1E332C;--muted:#A3B0AB;
+  --good:#6FCB94;--good-soft:#1D3226;--warn:#E0A559;--warn-soft:#362A16;--critical:#E37B6B;--critical-soft:#3A211C;color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:var(--text-sm);line-height:1.5;padding-inline:1rem}
+.page{display:flex;flex-direction:column;gap:1.25rem;max-width:840px;margin:0 auto;padding-block:2rem}
+.page-header{display:flex;gap:1rem;align-items:center}
+.brand-mark{width:2.75rem;height:2.75rem;flex:none;display:grid;place-items:center;border-radius:6px;background:var(--accent-soft);color:var(--accent);font:600 var(--text-lg) var(--font-display)}
+h1,h2{font-family:var(--font-display);font-weight:600;text-wrap:balance;margin:0}
+h1{font-size:var(--text-2xl)}h2{font-size:var(--text-lg)}
+.meta{margin:0;color:var(--muted);font-size:var(--text-xs)}
+.panel{background:var(--paper-raised);border:1px solid var(--line);border-radius:6px;padding:1.25rem 1.5rem;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem}
+.priority{border-color:var(--critical)}
+.priority p{margin:.4rem 0 0;font-size:var(--text-base);max-width:65ch}
+.eyebrow{font-size:var(--text-xs);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem}
+.stat-tile{background:var(--paper-raised);border:1px solid var(--line);border-radius:6px;padding:1rem 1.25rem;min-width:0}
+.stat-figure{font:500 var(--text-2xl) var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat-label{font-size:var(--text-xs);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:.15rem}
+.stat-context{margin:.4rem 0 0;color:var(--muted);font-size:var(--text-sm)}
+.status{display:inline-block;padding:.15rem .55rem;border-radius:3px;font:600 var(--text-xs) var(--font-body);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.status--good{background:var(--good-soft);color:var(--good)}
+.status--warn{background:var(--warn-soft);color:var(--warn)}
+.status--critical{background:var(--critical-soft);color:var(--critical)}
+.table-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:var(--text-xs);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.45rem}
+.kv{display:grid;grid-template-columns:1fr auto;gap:.35rem 1rem}
+.kv span:nth-child(even){font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+.sub{margin:1rem 0 .4rem}
+.appendix{font-size:var(--text-xs);color:var(--muted);display:flex;flex-direction:column;gap:.35rem}
+.appendix p{margin:0}
+.page-footer{font-size:var(--text-xs);color:var(--muted);border-top:1px solid var(--line);padding-top:.75rem}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="page">
+  <header class="page-header">
+    <div class="brand-mark">MG</div>
+    <div>
+      <h1>Business Pulse — Company 1</h1>
+      <p class="meta">QuickBooks: Company 1 Canada · Company 1 mail, Slack and calendar · Tuesday, Oct 13, 2026</p>
+    </div>
+  </header>
+
+  <section class="panel priority">
+    <div class="panel-head"><span class="eyebrow">#1 priority today</span><span class="status status--critical">Overall: red</span></div>
+    <h2>Collect the 61+ day receivables: 149.3k at face value</h2>
+    <p>CUSTOMER 396 owes USD 82,267.19 (Invoice 1, 66 days past due). Customer 907 has EUR 52,134.02 and AUD 14,891.88 at 75 to 107 days past due. You shared the AR collection file with Team Member 1 at 4:27 pm today; once he approves it, use it to drive the chase. Also confirm whether the roughly USD 24k that landed in Company 3 USA TD on Oct 12 is Customer 907, so Invoice 2 and Invoice 3 (26,021.09 open) can be applied.</p>
+  </section>
+
+  <section class="tiles">
+    <div class="stat-tile">
+      <div class="stat-figure">1.69M</div>
+      <div class="stat-label">Cash on hand</div>
+      <p class="stat-context">▬ flat vs. Oct 9 (1,685,625). Bank 2 CAD 665,447; Bank 2 USD 558,158. Face value.</p>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-figure">3.21M</div>
+      <div class="stat-label">Outstanding AR</div>
+      <p class="stat-context">▼ 687,217 (17.6%) vs. Oct 9 (3.90M). 32 open invoices.</p>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-figure">240k</div>
+      <div class="stat-label">Expenses, Oct 1–13</div>
+      <p class="stat-context">Transaction costs are 227,678 of it. No prior baseline. Income is 0 so far.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Cash and finance</h2><span class="status status--critical">Red · aging</span></div>
+    <div class="kv">
+      <span>Cash (all accounts)</span><span>1,685,625</span>
+      <span>Outstanding AR (32 invoices)</span><span>3,211,883</span>
+      <span>Accounts payable (balance sheet)</span><span>633,426</span>
+      <span>Due (to) from Company 3 USA</span><span>1,549,107</span>
+    </div>
+    <h2 class="sub" style="font-size:var(--text-base)">AR aging by days past due, as of Oct 13</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Bucket</th><th class="num">Amount</th><th>Read</th></tr></thead>
+      <tbody>
+        <tr><td>Not yet due</td><td class="num">2,876,816</td><td><span class="status status--good">OK</span></td></tr>
+        <tr><td>1–30 days</td><td class="num">172,303</td><td><span class="status status--good">OK</span></td></tr>
+        <tr><td>31–60 days</td><td class="num">13,471</td><td><span class="status status--warn">Review</span></td></tr>
+        <tr><td>61+ days</td><td class="num">149,293</td><td><span class="status status--critical">4.6% of AR</span></td></tr>
+      </tbody>
+    </table></div>
+    <h2 class="sub" style="font-size:var(--text-base)">Named invoices past due more than 30 days</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Customer</th><th class="num">Amount</th><th class="num">Days</th></tr></thead>
+      <tbody>
+        <tr><td>CUSTOMER 396 (Invoice 1)</td><td class="num">USD 82,267.19</td><td class="num">66</td></tr>
+        <tr><td>Customer 902</td><td class="num">EUR 48,000.95</td><td class="num">75–105</td></tr>
+        <tr><td>Customer 901</td><td class="num">AUD 14,891.88</td><td class="num">75–76</td></tr>
+        <tr><td>Customer 904</td><td class="num">EUR 2,805.54</td><td class="num">107</td></tr>
+        <tr><td>Customer 906</td><td class="num">EUR 1,327.52</td><td class="num">105</td></tr>
+        <tr><td>Customer 903</td><td class="num">EUR 13,268.58</td><td class="num">45</td></tr>
+        <tr><td>Customer 902</td><td class="num">EUR 220.35</td><td class="num">44</td></tr>
+      </tbody>
+    </table></div>
+    <p class="meta" style="margin-top:.75rem">Accounts payable: the bill detail rows total 305,230 (166,254 past due, 138,976 current), against 633,426 on the balance sheet. The 328,196 gap is unexplained, and the detail report may be incomplete. Largest receivables are not yet due: Customer 397 (about 1.6M, due Oct 30 and Nov 29), Customer 233, Customer 297 495k.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Needs a look in the books</h2><span class="status status--warn">Review</span></div>
+    <ul>
+      <li><strong>Customer 397 Invoice 4 (164,582.12) and 947 (522,635.20)</strong>, both due Sep 29, left AR since Oct 9. Together they equal the full 687,217.32 AR drop, but total cash did not move. Confirm whether they were paid, credited or reclassified.</li>
+      <li><strong>Customer 907 receipt</strong>: a USD receipt of about 25,365 dated Oct 2 is still unapplied against Invoice 2 and Invoice 3, which remain open.</li>
+      <li><strong>Cash mix shifted</strong> between accounts: Bank 2 CAD is up and Bank 2 USD is down since Oct 9, with the total unchanged.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>This week and next</h2></div>
+    <ul>
+      <li><strong>Tue Oct 13, 3:00 pm ET</strong>: 1 on 1 with Team Member 1, including the Company 1 financials walkthrough.</li>
+      <li>No other Company 1-tagged calendar events found through Oct 21.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Watch list</h2></div>
+    <ul>
+      <li><strong>Team Member 22 (Vendor 2)</strong> said Oct 7 he would answer your Receiver General balance question by end of week. Nothing has arrived. The September package is also back with him; on Oct 7 he moved the shared services add-back into the management adjustments line.</li>
+      <li><strong>Team Member 1, in Slack today</strong>: update employee commission payouts to the last day of each month; Cash Command Center notes (debt service still a placeholder, Lender 1 payment of 1,069,704.56 confirmed Oct 1, intercompany and taxes outstanding); updated loan file sent.</li>
+      <li><strong>Team Member 7</strong> shared the Company 1 invoicing workflow and will send a detailed version this afternoon.</li>
+    </ul>
+  </section>
+
+  <section class="panel appendix">
+    <h2>Appendix</h2>
+    <p><strong>Window</strong>: Oct 1 to Oct 13, 2026 (calendar through Oct 21).</p>
+    <p><strong>Not covered</strong>: Company 2 items and HubSpot pipeline by request. No payment processor connector is linked, so Revenue &amp; Sales and Pipeline are omitted. Company 3 USA bank balances are not in this QuickBooks file.</p>
+    <p><strong>Currency</strong>: QuickBooks did not return a base currency. Totals combine CAD, USD, EUR and AUD at face value.</p>
+    <p><strong>QuickBooks data notes</strong>: expense and net income figures come from the P&amp;L line items. The summary header has no prior-period values.</p>
+  </section>
+
+  <footer class="page-footer">Generated by <strong>Business Pulse</strong> — Small Business</footer>
+</div>
+
+</body></html>
